@@ -1,16 +1,15 @@
 {
-    "name": "My First PWA",
-    "short_name": "My PWA",
-    "description": "Aplikasi PWA pertama saya",
+    "name": "BolaKita App",
+    "short_name": "BolaKita",
+    "description": "Aplikasi daftar standing dan tim sepakbola",
     "start_url": "/index.html",
     "display": "standalone",
-    "background_color": "#00897B",
-    "theme_color": "#00897B",
-    "icons": [
-        {
-            "src": "icon.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
+    "background_color": "#212121",
+    "theme_color": "#212121",
+    "gcm_sender_id": "455305007862",
+    "icons": [{
+        "src": "icon.png",
+        "sizes": "512x512",
+        "type": "image/png"
+    }]
 }

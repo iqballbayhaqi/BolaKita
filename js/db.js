@@ -35,21 +35,27 @@ function getAll() {
     });
 }
 
+function deleteData(id) {
+    return new Promise((resolve, reject) => {
+        dbPromised
+            .then(function(db) {
+                const tx = db.transaction("articles", "readwrite");
+                const store = tx.objectStore("articles");
+                return store.delete(parseInt(id))
+            })
+    })
+}
+
 
 function getById(id) {
     return new Promise(function(resolve, reject) {
         dbPromised
             .then(function(db) {
-                console.log("db", db)
                 var tx = db.transaction("articles", "readonly");
-                console.log("tx", tx)
                 var store = tx.objectStore("articles");
-                console.log("store", store)
-                console.log("return", store.get(id));
-                return store.get(id);
+                return store.get(parseInt(id));
             })
             .then(function(article) {
-                console.log("final", resolve(article))
                 return resolve(article);
             });
     });
