@@ -1,4 +1,4 @@
-var base_url = "https://api.football-data.org/";
+const base_url = "https://api.football-data.org/";
 
 // Blok kode yang akan di panggil jika fetch berhasil
 function status(response) {
@@ -23,8 +23,15 @@ function error(error) {
     console.log("Error : " + error);
 }
 
+const fetchApi = url => {
+    fetch(base_url + url, {
+        method: "GET",
+        headers: { "X-Auth-Token": "7fa12231075a40f9a260585a31558f8c" }
+    });
+};
+
 // Blok kode untuk melakukan request data json
-function getArticles() {
+function getDataTeams() {
     if ("caches" in window) {
         caches
             .match(base_url + "v2/competitions/2001/standings")
@@ -57,8 +64,15 @@ function getArticles() {
               <tr>
                 <td style="display:flex;" >
                   <p style="padding-right:10px">${data.position}</p>
-                  <img class="img-responsive" src="${data.team.crestUrl.replace(/^http:\/\//i, 'https://')}" width="25px" />
-                  <a href="./article.html?id=${data.team.id}" style="color:white;"><p style="padding-left: 10px">${data.team.name}</p></a>
+                  <img class="img-responsive" src="${data.team.crestUrl.replace(
+                    /^http:\/\//i,
+                    "https://"
+                  )}" width="25px" alt="${data.team.name}" />
+                  <a href="./detail_team.html?id=${
+                    data.team.id
+                  }" style="color:white;"><p style="padding-left: 10px">${
+                  data.team.name
+                }</p></a>
                 </td>
                 <td>${data.playedGames}</td>
                 <td>${data.won}</td>
@@ -96,9 +110,6 @@ function getArticles() {
     .then(status)
     .then(json)
     .then(function(res) {
-      // Objek/array JavaScript dari response.json() masuk lewat data.
-
-      // Menyusun komponen card artikel secara dinamis
       const dataTable = res.standings
         .filter(({ type }) => type === "TOTAL")
         .map(value => {
@@ -125,8 +136,15 @@ function getArticles() {
               <tr>
                 <td style="display:flex;" >
                   <p style="padding-right:10px">${data.position}</p>
-                  <img class="img-responsive" src="${data.team.crestUrl.replace(/^http:\/\//i, 'https://')}" width="25px" />
-                  <a href="./article.html?id=${data.team.id}" style="color:white;"><p style="padding-left: 10px">${data.team.name}</p></a>
+                  <img class="img-responsive" src="${data.team.crestUrl.replace(
+                    /^http:\/\//i,
+                    "https://"
+                  )}" width="25px" alt="${data.team.name}" />
+                  <a href="./detail_team.html?id=${
+                    data.team.id
+                  }" style="color:white;"><p style="padding-left: 10px">${
+                  data.team.name
+                }</p></a>
                 </td>
                 <td>${data.playedGames}</td>
                 <td>${data.won}</td>
@@ -153,12 +171,12 @@ function getArticles() {
     .catch(error);
 }
 
-function getArticleById() {
+function getDataTeamId() {
   return new Promise(function(resolve, reject) {
     // Ambil nilai query parameter (?id=)
     var urlParams = new URLSearchParams(window.location.search);
     var idParam = urlParams.get("id");
-  
+
     if ("caches" in window) {
       caches.match(base_url + `v2/teams/${idParam}`).then(function(response) {
         if (response) {
@@ -168,7 +186,9 @@ function getArticleById() {
               <div class="col s12">
                 <div class="card">
                   <div class="card-image">
-                    <img class="responsive-img" src=${res.crestUrl}>
+                    <img class="responsive-img" src=${res.crestUrl} alt="${
+              res.name
+            }">
                   </div>
                   <div class="card-content">
                     <span class="card-title">${res.name}</span>
@@ -176,8 +196,8 @@ function getArticleById() {
                     <p>Email : ${res.email}</p>
                     <p>Phone : ${res.phone}</p>
                     <p>Website : <a href=${res.website} target="_blank">${
-                  res.website
-                }</a></p>
+              res.website
+            }</a></p>
                     <p>Competitions : </p>
                     <ul>
                       ${res.activeCompetitions
@@ -201,10 +221,14 @@ function getArticleById() {
                           return `
                         <tr>
                           <td>${
-                            data.shirtNumber === null ? "none" : data.shirtNumber
+                            data.shirtNumber === null
+                              ? "none"
+                              : data.shirtNumber
                           }</td>
                           <td>${data.name}</td>
-                          <td>${data.role === "COACH" ? "COACH" : data.position}</td>
+                          <td>${
+                            data.role === "COACH" ? "COACH" : data.position
+                          }</td>
                         </tr>
                         `;
                         })
@@ -224,7 +248,7 @@ function getArticleById() {
         }
       });
     }
-  
+
     fetch(base_url + `v2/teams/${idParam}`, {
       method: "GET",
       headers: { "X-Auth-Token": "7fa12231075a40f9a260585a31558f8c" }
@@ -232,15 +256,15 @@ function getArticleById() {
       .then(status)
       .then(json)
       .then(function(res) {
-        console.log(res)
-        // Objek JavaScript dari response.json() masuk lewat variabel data.
-        // Menyusun komponen card artikel secara dinamis
         const dataTeam = `
             <div class="row">
               <div class="col s12">
                 <div class="card">
                   <div class="card-image">
-                    <img class="responsive-img" src=${res.crestUrl.replace(/^http:\/\//i, 'https://')}>
+                    <img class="responsive-img" src=${res.crestUrl.replace(
+                      /^http:\/\//i,
+                      "https://"
+                    )} alt="${res.name}">
                   </div>
                   <div class="card-content">
                     <span class="card-title">${res.name}</span>
@@ -248,8 +272,8 @@ function getArticleById() {
                     <p>Email : ${res.email}</p>
                     <p>Phone : ${res.phone}</p>
                     <p>Website : <a href=${res.website} target="_blank">${
-                  res.website
-                }</a></p>
+          res.website
+        }</a></p>
                     <p>Competitions : </p>
                     <ul>
                       ${res.activeCompetitions
@@ -273,10 +297,14 @@ function getArticleById() {
                           return `
                         <tr>
                           <td>${
-                            data.shirtNumber === null ? "none" : data.shirtNumber
+                            data.shirtNumber === null
+                              ? "none"
+                              : data.shirtNumber
                           }</td>
                           <td>${data.name}</td>
-                          <td>${data.role === "COACH" ? "COACH" : data.position}</td>
+                          <td>${
+                            data.role === "COACH" ? "COACH" : data.position
+                          }</td>
                         </tr>
                         `;
                         })
@@ -288,34 +316,37 @@ function getArticleById() {
               </div>
             </div>
             `;
-            // Sisipkan komponen card ke dalam elemen dengan id #content
-            document.getElementById("data-team").innerHTML = dataTeam;
-            // Kirim objek data hasil parsing json agar bisa disimpan ke indexed db
-            resolve(res);
+        // Sisipkan komponen card ke dalam elemen dengan id #content
+        document.getElementById("data-team").innerHTML = dataTeam;
+        // Kirim objek data hasil parsing json agar bisa disimpan ke indexed db
+        resolve(res);
       });
-  })
+  });
 }
 
 // ambil data dari DB
-function getSavedArticles() {
-  getAll().then(function(articles) {
-    var articlesHTML = "";
-    articles.forEach(function(article) {
-      articlesHTML += `
+function getSavedDataTeams() {
+  getAll().then(function(data) {
+    var dataHTML = "";
+    data.forEach(function(data) {
+      dataHTML += `
       <table>
-        <tr id=${article.id}>
-            <td><img src=${article.crestUrl.replace(/^http:\/\//i, 'https://')} style="width: 100px;" /></td>
-            <td>${article.shortName}</td>
+        <tr id=${data.id}>
+            <td><img src=${data.crestUrl.replace(
+              /^http:\/\//i,
+              "https://"
+            )} style="width: 100px;" alt="${data.name}" /></td>
+            <td>${data.shortName}</td>
             <td>
               <a 
               class="waves-effect light-blue accent-3 btn-small" 
-              href="./article.html?id=${article.id}&saved=true"
+              href="./detail_team.html?id=${data.id}&saved=true"
               >
                 OPEN
               </a>
             <a 
               class="waves-effect red darken-1 btn-small" 
-              onclick="deleteBtn(${article.id})">
+              onclick="deleteBtn(${data.id})">
             <i class="material-icons">delete</i>
             </a>
             </td>
@@ -324,27 +355,32 @@ function getSavedArticles() {
       `;
     });
     // Sisipkan komponen card ke dalam elemen dengan id #body-content
-    document.getElementById("body-content").innerHTML = articlesHTML;
+    document.getElementById("body-content").innerHTML = dataHTML;
   });
 }
 
-const deleteBtn = (id) => {
+const deleteBtn = id => {
   deleteData(id);
   showNotifDelete();
   document.getElementById(id).style.display = "none";
-}
+  M.toast({
+    html: "Data Dihapus !"
+  });
+};
 
-function getSavedArticleById() {
+function getSavedDataTeamById() {
   var urlParams = new URLSearchParams(window.location.search);
   var idParam = urlParams.get("id");
-  var articleHTML = "";
   getById(idParam).then(res => {
     const dataTeam = `
             <div class="row">
               <div class="col s12">
                 <div class="card">
                   <div class="card-image">
-                    <img class="responsive-img" src=${res.crestUrl.replace(/^http:\/\//i, 'https://')}>
+                    <img class="responsive-img" src=${res.crestUrl.replace(
+                      /^http:\/\//i,
+                      "https://"
+                    )} alt="${res.name}">
                   </div>
                   <div class="card-content">
                     <span class="card-title">${res.name}</span>
@@ -352,8 +388,8 @@ function getSavedArticleById() {
                     <p>Email : ${res.email}</p>
                     <p>Phone : ${res.phone}</p>
                     <p>Website : <a href=${res.website} target="_blank">${
-                  res.website
-                }</a></p>
+      res.website
+    }</a></p>
                     <p>Competitions : </p>
                     <ul>
                       ${res.activeCompetitions
@@ -377,10 +413,14 @@ function getSavedArticleById() {
                           return `
                         <tr>
                           <td>${
-                            data.shirtNumber === null ? "none" : data.shirtNumber
+                            data.shirtNumber === null
+                              ? "none"
+                              : data.shirtNumber
                           }</td>
                           <td>${data.name}</td>
-                          <td>${data.role === "COACH" ? "COACH" : data.position}</td>
+                          <td>${
+                            data.role === "COACH" ? "COACH" : data.position
+                          }</td>
                         </tr>
                         `;
                         })
@@ -392,7 +432,7 @@ function getSavedArticleById() {
               </div>
             </div>
             `;
-            // Sisipkan komponen card ke dalam elemen dengan id #content
-            document.getElementById("data-team").innerHTML = dataTeam;
-});
+    // Sisipkan komponen card ke dalam elemen dengan id #content
+    document.getElementById("data-team").innerHTML = dataTeam;
+  });
 }

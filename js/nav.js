@@ -46,9 +46,9 @@ document.addEventListener("DOMContentLoaded", function() {
             if (this.readyState == 4) {
                 var content = document.querySelector("#body-content");
                 if (page === "home") {
-                    getArticles();
+                    getDataTeams();
                 } else if (page === "saved") {
-                    getSavedArticles();
+                    getSavedDataTeams();
                 }
 
                 if (this.status == 200) {

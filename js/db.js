@@ -1,18 +1,18 @@
 var dbPromised = idb.open("BolaKita", 1, function(upgradeDb) {
-    var articlesObjectStore = upgradeDb.createObjectStore("articles", {
+    var teamsObjectStore = upgradeDb.createObjectStore("teams", {
         keyPath: "id"
     });
-    articlesObjectStore.createIndex("post_title", "post_title", { unique: false });
+    teamsObjectStore.createIndex("post_title", "post_title", { unique: false });
 });
 
-// save articles
-function saveForLater(article) {
+// save data
+function saveForLater(data) {
     dbPromised
         .then(function(db) {
-            var tx = db.transaction("articles", "readwrite");
-            var store = tx.objectStore("articles");
-            console.log(article);
-            store.add(article);
+            var tx = db.transaction("teams", "readwrite");
+            var store = tx.objectStore("teams");
+            console.log(data);
+            store.put(data);
             return tx.complete;
         })
         .then(function() {
@@ -25,12 +25,12 @@ function getAll() {
     return new Promise(function(resolve, reject) {
         dbPromised
             .then(function(db) {
-                var tx = db.transaction("articles", "readonly");
-                var store = tx.objectStore("articles");
+                var tx = db.transaction("teams", "readonly");
+                var store = tx.objectStore("teams");
                 return store.getAll();
             })
-            .then(function(articles) {
-                resolve(articles);
+            .then(function(teams) {
+                resolve(teams);
             });
     });
 }
@@ -39,8 +39,8 @@ function deleteData(id) {
     return new Promise((resolve, reject) => {
         dbPromised
             .then(function(db) {
-                const tx = db.transaction("articles", "readwrite");
-                const store = tx.objectStore("articles");
+                const tx = db.transaction("teams", "readwrite");
+                const store = tx.objectStore("teams");
                 return store.delete(parseInt(id))
             })
     })
@@ -51,12 +51,12 @@ function getById(id) {
     return new Promise(function(resolve, reject) {
         dbPromised
             .then(function(db) {
-                var tx = db.transaction("articles", "readonly");
-                var store = tx.objectStore("articles");
+                var tx = db.transaction("teams", "readonly");
+                var store = tx.objectStore("teams");
                 return store.get(parseInt(id));
             })
-            .then(function(article) {
-                return resolve(article);
+            .then(function(data) {
+                return resolve(data);
             });
     });
 }

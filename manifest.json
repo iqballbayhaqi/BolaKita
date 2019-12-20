@@ -8,8 +8,12 @@
     "theme_color": "#212121",
     "gcm_sender_id": "455305007862",
     "icons": [{
-        "src": "icon.png",
+        "src": "icon_512.png",
         "sizes": "512x512",
+        "type": "image/png"
+    }, {
+        "src": "icon_192.png",
+        "sizes": "192x192",
         "type": "image/png"
     }]
 }

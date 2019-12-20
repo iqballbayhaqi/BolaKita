@@ -8,15 +8,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="css/materialize.min.css" />
     <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#00897B" />
+    <meta name="theme-color" content="#212121" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="apple-touch-icon" href="/icon_192.png">
 </head>
 
 <body>
     <!-- Navigasi -->
     <nav class="grey darken-4" role="navigation">
         <div class="nav-wrapper container">
-            <a href="#" class="brand-logo" id="logo-container">BolaKita</a>
+            <a href="#" class="brand-logo" id="logo-container"><img src="/icon_512.png" width="25px" />BolaKita</a>
             <a href="./index.html" class="sidenav-trigger" data-target="nav-mobile">
                 <i class="material-icons">arrow_back</i>
             </a>
@@ -26,7 +27,23 @@
     </nav>
     <!-- Akhir Navigasi -->
 
-    <div class="container" id="data-team"></div>
+    <div class="container" id="data-team">
+        <div class="center-align" style="margin-top:100px">
+            <div class="preloader-wrapper active">
+                <div class="spinner-layer spinner-yellow-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="fixed-action-btn">
         <a class="btn-floating btn-large red" id="save">
             <i class="large material-icons">save</i>
@@ -39,27 +56,12 @@
     <script src="node_modules/idb/lib/idb.js"></script>
     <script src="js/db.js"></script>
     <script src="js/notification.js"></script>
-
+    <script src="js/script.js"></script>
     <script>
-        // REGISTER SERVICE WORKER
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", function() {
-                navigator.serviceWorker
-                    .register("/service-worker.js")
-                    .then(function() {
-                        console.log("Pendaftaran ServiceWorker berhasil");
-                    })
-                    .catch(function() {
-                        console.log("Pendaftaran ServiceWorker gagal");
-                    });
-            });
-        } else {
-            console.log("ServiceWorker belum didukung browser ini.");
-        }
         document.addEventListener("DOMContentLoaded", function() {
             var urlParams = new URLSearchParams(window.location.search);
             var isFormSaved = urlParams.get("saved");
-            console.log(urlParams)
+            console.log(urlParams);
 
             var btnSave = document.getElementById("save");
 
@@ -68,16 +70,19 @@
                 btnSave.style.display = "none";
 
                 // ambil artikel lalu tampilkan
-                getSavedArticleById();
+                getSavedDataTeamById();
             } else {
-                var item = getArticleById();
+                var item = getDataTeamId();
             }
 
             btnSave.onclick = function() {
                 console.log("Tombol FAB di klik.");
-                item.then(function(article) {
-                    saveForLater(article);
+                item.then(function(data) {
+                    saveForLater(data);
                     showNotifSave();
+                    M.toast({
+                        html: 'Data Tersimpan !'
+                    })
                 });
             };
         });
